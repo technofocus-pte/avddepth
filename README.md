@@ -1,0 +1,2 @@
+# avddepth
+Azure Virtual Desktop
