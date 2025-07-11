@@ -97,14 +97,14 @@ Resources tab on the right side of the lab session window.
     following string to the existing content (make sure to add a leading
     semicolon character (;) if needed to separate this string from the
     one which precedes it:
+    
+`targetisaadjoined:i:1                                                                         `
 
-targetisaadjoined:i:1
-
-5.  In the **RDP Properties** text box, remove the following string (if
+6.  In the **RDP Properties** text box, remove the following string (if
     present) from the existing content (with its trailing semicolon
     character):
 
-enablerdsaadauth:i:value
+`enablerdsaadauth:i:value                                                                      `
 
 6.  On the **az140-21-hp1 | RDP Properties** page, select **Save**.
 
