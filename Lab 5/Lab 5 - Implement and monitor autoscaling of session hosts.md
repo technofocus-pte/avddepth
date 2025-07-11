@@ -99,8 +99,9 @@ subscription you are using in this lab and then select **Apply**.
     following command to retrieve the value of the Id property of the
     Azure subscription you are using in this lab and store it in a
     variable $subId:
-
-$subId = (Get-AzSubscription).Id
+```
+$subId = (Get-AzSubscription).Id`
+```
 
 4.  Run the following command to create a $parameters variable, which
     stores a hash table that contains the values of the RBAC role
@@ -108,20 +109,19 @@ $subId = (Get-AzSubscription).Id
     the **Azure Virtual Desktop** service principal, and the
     subscription scope:
 
-5.  $parameters = @{
-
-6.  RoleDefinitionName = "Desktop Virtualization Power On Off
-    Contributor"
-
-7.  ApplicationId = "9cdead84-a844-4324-93f2-b2e6bb768d07"
-
-8.  Scope = "/subscriptions/$subId"
-
+```
+$parameters = @{
+    RoleDefinitionName = "Desktop Virtualization Power On Off Contributor"
+    ApplicationId = "9cdead84-a844-4324-93f2-b2e6bb768d07"
+    Scope = "/subscriptions/$subId"
 }
+```
 
 9.  Run the following command to create the RBAC role assignment:
 
+```
 New-AzRoleAssignment @parameters
+```
 
 10. Close the Cloud Shell pane.
 
@@ -184,71 +184,84 @@ autoscaling functionality.
 3.  On the **Basics** tab of the **Create a scaling plan** page, specify
     the following settings and select **Next : Schedules**:
 
-[TABLE]
+| Setting              | Value                                                                 |
+|----------------------|-----------------------------------------------------------------------|
+| Subscription         | The name of the Azure subscription you are using in this lab         |
+| Resource group       | The name of a new resource group `az140-412e-RG`                     |
+| Scaling plan name    | `az140-scalingplan412e`                                               |
+| Region               | The name of the Azure region where you deployed the AVD environment  |
+| Friendly name        | `az140-scalingplan412e`                                               |
+| Time zone            | The local time zone of the Azure region where you deployed AVD       |
+| Host pool type       | Pooled                                                                |
+| Scaling method       | Power management autoscaling                                          |
 
-4.  **Note**: Leave the **Exclusion tag** property not set. In general,
-    you can use this feature to exclude Azure VMs with arbitrarily set
-    tags from autoscaling.
+**Note**: Leave the **Exclusion tag** property not set. In general, you can use this feature to exclude Azure VMs with arbitrarily set tags from autoscaling.
 
-5.  On the **Schedule** tab, select **+ Add schedule**.
+4.  On the **Schedule** tab, select **+ Add schedule**.
 
 **Note**: Schedules allow you to define ramp-up hours, peak hours,
 ramp-down hours, and off-peak hours for week days and specify
 autoscaling triggers. Scaling plan must include an associated schedule
 for at least one day of the week.
 
-6.  On the **General** tab of the **Add a schedule** pane, adjust the
+5.  On the **General** tab of the **Add a schedule** pane, adjust the
     default configuration to match the following settings and then
     select **Next**:
 
-[TABLE]
+| Setting       | Value                                                                                         |
+|---------------|-----------------------------------------------------------------------------------------------|
+| Time zone     | The local time zone of your Azure Virtual Desktop environment (based on the region you selected earlier in this task) |
+| Schedule name | `week_schedule`                                                                               |
+| Repeat on     | 7 selected (select all days of the week)                                                     |
 
-7.  **Note**: The schedule effectively covers every day of the week,
-    which will facilitate evaluating outcome of autoscaling.
+**Note**: The schedule effectively covers every day of the week, which will facilitate evaluating outcome of autoscaling.
 
-8.  On the **Ramp-up** tab of the **Add a schedule** pane, adjust the
+6.  On the **Ramp-up** tab of the **Add a schedule** pane, adjust the
     default configuration to match the following settings and then
     select **Next**:
 
-[TABLE]
+| Setting                          | Value                                |
+|----------------------------------|--------------------------------------|
+| Start time (12 hour system)      | Your current time minus 1 hour       |
+| Load balancing algorithm         | Breadth-first                        |
+| Minimum percentage of hosts (%)  | 30                                   |
+| Capacity threshold (%)           | 60                                   |
 
-9.  **Note**: For pooled host pools, autoscale ignores existing
-    load-balancing algorithms in your host pool settings, and instead
-    applies load balancing based on your schedule configuration.
+**Note**: For pooled host pools, autoscale ignores existing load-balancing algorithms in your host pool settings, and instead applies load balancing based on your schedule configuration.
 
-10. **Note**: The **Minimum percentage of hosts** setting designates the
-    minimum percentage of session host virtual machines to start for
-    ramp-up and peak hours. For example, if **Minimum percentage of
-    hosts** is specified as 30% and total number of session hosts in
-    your host pool is 3, autoscale will ensure a minimum of 1 session
-    host is available to accept user connections.
+**Note**: The **Minimum percentage of hosts** setting designates the minimum percentage of session host virtual machines to start forramp-up and peak hours. For example, if **Minimum percentage of hosts** is specified as 30% and total number of session hosts in your host pool is 3, autoscale will ensure a minimum of 1 session host is available to accept user connections.
 
-11. **Note**: Autoscale rounds up to the nearest whole number.
+**Note**: Autoscale rounds up to the nearest whole number.
 
-12. **Note**: The **Capacity threshold** setting is the percentage of
-    used host pool capacity that will be considered to evaluate whether
-    to turn on/off virtual machines during the ramp-up and peak hours.
-    For example, if capacity threshold is specified as 60% and your host
-    pool capacity is 1 session (with one host running), autoscale will
-    turn on additional session hosts once the load of the host pool
-    exceeds 60% (it's 100% in this case).
+**Note**: The **Capacity threshold** setting is the percentage of used host pool capacity that will be considered to evaluate whether to turn on/off virtual machines during the ramp-up and peak hours. For example, if capacity threshold is specified as 60% and your host pool capacity is 1 session (with one host running), autoscale will turn on additional session hosts once the load of the host pool exceeds 60% (it's 100% in this case).
 
-13. On the **Peak hours** tab of the **Add a schedule** pane, adjust the
+7.  On the **Peak hours** tab of the **Add a schedule** pane, adjust the
     default configuration to match the following settings and then
     select **Next**:
+    
+| Setting                   | Value                      |
+|---------------------------|----------------------------|
+| Start time (12 hour system) | Your current time plus 1 hour |
+| Load balancing algorithm  | Depth-first                |
+| Capacity threshold (%)    | 60                         |
 
-[TABLE]
-
-14. **Note**: The **Capacity threshold (%)** setting is shared between
+  **Note**: The **Capacity threshold (%)** setting is shared between
     the **Ramp-up** and **Peak hours** settings.
 
-15. On the **Ramp-down** tab of the **Add a schedule** pane, adjust the
+8. On the **Ramp-down** tab of the **Add a schedule** pane, adjust the
     default configuration to match the following settings and then
     select **Next**:
 
-[TABLE]
+| Setting                         | Value                                           |
+|---------------------------------|------------------------------------------------|
+| Start time (12 hour system)      | Your current time plus 2 hours                   |
+| Load balancing algorithm         | Depth-first                                     |
+| Minimum percentage of active hosts (%) | 10                                     |
+| Capacity threshold (%)           | 80                                             |
+| Force sign out users             | No                                              |
+| Stop VMs when                   | VMs have no active or disconnected sessions     |
 
-16. **Note**: The **Minimum percentage of active hosts (%)** setting
+   **Note**: The **Minimum percentage of active hosts (%)** setting
     designates the minimum percentage of session host virtual machines
     that you would like to get to for ramp-down and off-peak hours. For
     example, if **Minimum percentage of active hosts (%)** is set to 10%
@@ -256,46 +269,47 @@ for at least one day of the week.
     will ensure a minimum of 1 session host is available to take user
     connections.
 
-17. **Note**: The **Capacity threshold (%)** setting designates the
+   **Note**: The **Capacity threshold (%)** setting designates the
     percentage of used host pool capacity that will be considered to
     evaluate whether to turn off virtual machines during the ramp-down
     and off-peak hours. For example, with 1 user connection and 3 hosts
     running, if capacity threshold is specified as 80%, autoscale would
     turn off 1 host (resulting in 50% used host pool capacity).
 
-18. **Note**: In general, autoscale will stop and deallocate session
+   **Note**: In general, autoscale will stop and deallocate session
     hosts according to the following rules:
 
-    - The used host pool capacity is below the capacity threshold.
+    
+- The used host pool capacity is below the capacity threshold.
 
-    - Turning off session hosts will not result in exceeding the
-      capacity threshold.
+- Turning off session hosts will not result in exceeding the capacity threshold.
 
-    - Autoscale only turns off session hosts with no user sessions on
-      them, unless the scaling plan is in ramp-down phase and you've
-      enabled the setting to force user logoff.
+- Autoscale only turns off session hosts with no user sessions on them, unless the scaling plan is in ramp-down phase and you've enabled the setting to force user logoff.
 
-    - Pooled autoscale will not turn off session hosts in the ramp-up
-      phase to ensure that user experience is not impacted.
+- Pooled autoscale will not turn off session hosts in the ramp-up phase to ensure that user experience is not impacted.
 
-19. On the **Off-peak hours** tab of the **Add a schedule** pane, adjust
+9. On the **Off-peak hours** tab of the **Add a schedule** pane, adjust
     the default configuration to match the following settings and then
     select **Add**:
 
-[TABLE]
+| Setting                   | Value                      |
+|---------------------------|----------------------------|
+| Start time (12 hour system) | Your current time plus 3 hours |
+| Load balancing algorithm  | Depth-first                |
+| Capacity threshold (%)    | 80                         |
 
-20. **Note**: The **Capacity threshold** setting is shared between
+   **Note**: The **Capacity threshold** setting is shared between
     the **Ramp-down** and **Off-peak hours** settings.
 
-21. Back on the **Schedule** tab of the **Create a scaling plan** page,
+10. Back on the **Schedule** tab of the **Create a scaling plan** page,
     select **Next : Host pool assignments**.
 
-22. On the **Host pool assignments** tab, in the **Select host
+11. On the **Host pool assignments** tab, in the **Select host
     pool** drop-down list, select **az140-21-hp1**, ensure that **Enable
     autoscale** checkbox is selected, and then select **Review +
     create**.
 
-23. On the **Review + Create** page, select **Create**.
+12. On the **Review + Create** page, select **Create**.
 
 **Note**: Wait for autoscale configuration to complete. This typically
 takes just a few seconds.
@@ -393,7 +407,9 @@ system)** of the **Peek hours** phase.
     session to the host pool and, at the Command Prompt, enter the
     following and press the **Enter** key:
 
+```
 logoff
+```
 
 18. From the lab computer, in the web browser displaying the Azure
     portal, search for and select **Azure Virtual Desktop** and, on
