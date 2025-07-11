@@ -37,16 +37,18 @@ Microsoft Entra joined session hosts**
 
 The main tasks for this exercise are as follows:
 
-1.  Prepare the Azure subscription for deployment of an Azure Virtual
+1.  Create Remote ad Desktop Applicatio Groups
+
+2.  Prepare the Azure subscription for deployment of an Azure Virtual
     Desktop host pool
 
-2.  Deploy an Azure Virtual Desktop host pool
+3.  Deploy an Azure Virtual Desktop host pool
 
-3.  Create an Azure Virtual Desktop application group
+4.  Create an Azure Virtual Desktop application group
 
-4.  Create an Azure Virtual Desktop workspace
+5.  Create an Azure Virtual Desktop workspace
 
-5.  Grant access to Azure Virtual Desktop host pools
+6.  Grant access to Azure Virtual Desktop host pools
 
 **Task 1: Create Desktop and Remote Application Groups**
 
@@ -121,22 +123,33 @@ a couple of minutes.
 
 6.  On the **Basics** tab of the **Create virtual network** page,
     specify the following settings and select **Next**:
-
-[TABLE]
+    
+| Setting              | Value                                                                 |
+|----------------------|-----------------------------------------------------------------------|
+| Subscription         | The name of the Azure subscription you are using in this lab         |
+| Resource group       | The name of a new resource group az140-11e-RG                        |
+| Virtual network name | az140-vnet11e                                                        |
+| Region               | The name of the Azure region where you want to deploy the Azure Virtual Desktop environment |
 
 7.  On the **Security** tab, accept the default settings and
     select **Next**.
 
 8.  On the **IP addresses** tab, apply the following settings (modify
     the default if needed):
-
-[TABLE]
+    
+| Setting          | Value       |
+|------------------|-------------|
+| IP address space | 10.20.0.0/16 |
 
 9.  Select the edit (pencil) icon next to the **default** subnet entry,
     in the **Edit** pane, specify the following settings (leave others
     with their existing values) and select **Save**:
-
-[TABLE]
+    
+| Setting                                             | Value           |
+|-----------------------------------------------------|-----------------|
+| Name                                                | hp1-Subnet      |
+| Starting address                                    | 10.20.1.0       |
+| Enable private subnet (no default outbound access)  | Disabled        |
 
 10. Back on the **IP addresses** tab, select **Review + create** and
     then, on the **Review + create** tab, select **Create**.
@@ -190,13 +203,23 @@ typically takes less than 1 minute.
 2.  On the **Basics** tab of the **Create a host pool** page, specify
     the following settings and select **Next: Session hosts \>** (leave
     other settings with their default values):
+    
+| Setting                       | Value                                                                 |
+|------------------------------|-----------------------------------------------------------------------|
+| Subscription                 | The name of the Azure subscription you are using in this lab         |
+| Resource group               | The name of a new resource group az140-21e-RG                         |
+| Host pool name               | az140-21-hp1                                                          |
+| Location                     | The name of the Azure region where you want to deploy your Azure Virtual Desktop environment |
+| Validation environment       | No                                                                    |
+| Preferred app group type     | Desktop                                                               |
+| Host pool type               | Pooled                                                                |
+| Create Session Host Configuration | No                                                              |
+| Load balancing algorithm     | Breadth-first                                                         |
 
-[TABLE]
-
-3.  **Note**: When using the Breadth-first load balancing algorithm, the
+**Note**: When using the Breadth-first load balancing algorithm, the
     max session limit parameter is optional.
 
-4.  On the **Session hosts** tab of the **Create a host pool** page,
+3.  On the **Session hosts** tab of the **Create a host pool** page,
     specify the following settings and select **Next: Workspace
     \>** (leave other settings with their default values):
 
@@ -205,7 +228,30 @@ Resources tab on the right side of the lab session window and identify
 the string of characters between *User1-* and the *@* character. Use
 this string to replace the *random* placeholder.
 
-[TABLE]
+| Setting                                           | Value                                                                                     |
+|---------------------------------------------------|-------------------------------------------------------------------------------------------|
+| Add virtual machines                              | Yes                                                                                       |
+| Resource group                                    | Defaulted to same as host pool                                                            |
+| Name prefix                                       | sh-random                                                                                 |
+| Virtual machine type                              | Azure virtual machine                                                                     |
+| Virtual machine location                          | The name of the Azure region where you want to deploy your Azure Virtual Desktop environment |
+| Availability options                             | No infrastructure redundancy required                                                    |
+| Security type                                    | Trusted launch virtual machines                                                          |
+| Image                                            | Windows 11 Enterprise multi-session, Version 23H2 + Microsoft 365 Apps                   |
+| Virtual machine size                             | Standard DC2s_v3                                                                         |
+| Number of VMs                                    | 2                                                                                        |
+| OS disk type                                     | Standard SSD                                                                            |
+| OS disk size                                     | Default size (128GiB)                                                                    |
+| Boot Diagnostics                                 | Enable with managed storage account (recommended)                                       |
+| Virtual network                                  | az140-vnet11e                                                                           |
+| Subnet                                           | hp1-Subnet                                                                             |
+| Network security group                           | Basic                                                                                   |
+| Public inbound ports                             | No                                                                                      |
+| Select which directory you would like to join    | Microsoft Entra ID                                                                      |
+| Enroll VM with Intune                            | No                                                                                      |
+| User name                                        | Student                                                                                 |
+| Password                                         | Any sufficiently complex string of characters that will be used as the password for the built-in administrator account |
+| Confirm password                                 | The same string of characters you specified previously               
 
 **Note**: The password should be at least 12 characters in length and
 consist of a combination of lower-case characters, upper-case
@@ -213,12 +259,14 @@ characters, digits, and special characters. For details, refer to the
 information about [the password requirements when creating an Azure
 VM](https://learn.microsoft.com/en-us/azure/virtual-machines/windows/faq#what-are-the-password-requirements-when-creating-a-vm-).
 
-5.  On the **Workspace** tab of the **Create a host pool** page, confirm
+4.  On the **Workspace** tab of the **Create a host pool** page, confirm
     the following setting and select **Review + create**:
 
-[TABLE]
+| Setting                  | Value |
+|--------------------------|-------|
+| Register desktop app group | No    |
 
-6.  On the **Review + create** tab of the **Create a host pool** page,
+5.  On the **Review + create** tab of the **Create a host pool** page,
     select **Create**.
 
 **Note**: Wait for the deployment to complete. This might take about 20
@@ -251,7 +299,13 @@ minutes.
 7.  On the **Basics** tab of the **Create an application group** page,
     specify the following settings and select **Next: Applications \>**:
 
-[TABLE]
+| Setting                | Value                                                              |
+|------------------------|--------------------------------------------------------------------|
+| Subscription           | The name of the Azure subscription you are using in this lab       |
+| Resource group         | az140-21e-RG                                                       |
+| Host pool              | az140-21-hp1                                                       |
+| Application group type | Remote App                                                         |
+| Application group name | az140-21-hp1-Office365-RAG                                         |
 
 8.  On the **Applications** tab of the **Create an application
     group** page, select **+ Add applications**.
@@ -259,7 +313,13 @@ minutes.
 9.  On the **Add application** page, specify the following settings and
     select **Review + add**, then select **Add**:
 
-[TABLE]
+| Setting            | Value           |
+|--------------------|-----------------|
+| Application source | Start menu      |
+| Application        | Word            |
+| Display name       | Microsoft Word  |
+| Description        | Microsoft Word  |
+| Require command line | No            |
 
 10. Back on the **Applications** tab of the **Create an application
     group** page, select **+ Add applications**.
@@ -267,7 +327,13 @@ minutes.
 11. On the **Add application** page, specify the following settings and
     select **Review + add**, then select **Add**:
 
-[TABLE]
+| Setting              | Value            |
+|----------------------|------------------|
+| Application source   | Start menu       |
+| Application          | Excel            |
+| Display name         | Microsoft Excel  |
+| Description          | Microsoft Excel  |
+| Require command line | No               |
 
 12. Back on the **Applications** tab of the **Create an application
     group** page, select **+ Add applications**.
@@ -275,7 +341,13 @@ minutes.
 13. On the **Add application** page, specify the following settings and
     select **Review + add**, then select **Add**:
 
-[TABLE]
+| Setting              | Value               |
+|----------------------|---------------------|
+| Application source   | Start menu          |
+| Application          | PowerPoint          |
+| Display name         | Microsoft PowerPoint|
+| Description          | Microsoft PowerPoint|
+| Require command line | No                  |
 
 14. Back on the **Applications** tab of the **Create an application
     group** page, select **Next: Assignments \>**.
@@ -294,7 +366,9 @@ minutes.
 18. On the **Workspace** tab of the **Create a workspace** page, specify
     the following setting and select **Review + create**:
 
-[TABLE]
+| Setting                   | Value |
+|---------------------------|-------|
+| Register application group | No    |
 
 19. On the **Review + create** tab of the **Create an application
     group** page, select **Create**.
@@ -315,7 +389,13 @@ as the application source.
 22. On the **Basics** tab of the **Create an application group** page,
     specify the following settings and select **Next: Applications \>**:
 
-[TABLE]
+| Setting                | Value                                              |
+|------------------------|----------------------------------------------------|
+| Subscription           | The name of the Azure subscription you are using in this lab |
+| Resource group         | az140-21e-RG                                       |
+| Host pool              | az140-21-hp1                                       |
+| Application group type | RemoteApp                                          |
+| Application group name | az140-21-hp1-Utilities-RAG                         |
 
 23. On the **Applications** tab of the **Create an application
     group** page, select **+ Add applications**.
@@ -323,12 +403,22 @@ as the application source.
 24. On the **Add application** page, on the **Basics** tab, specify the
     following settings and select **Next**:
 
-[TABLE]
+| Setting              | Value                    |
+|----------------------|--------------------------|
+| Application source   | File path                |
+| Application path     | C:\Windows\system32\cmd.exe |
+| Application identifier | Command Prompt          |
+| Display name         | Command Prompt           |
+| Description          | Windows Command Prompt   |
+| Require command line | No                       |
 
 25. On the **Icon** tab, specify the following settings and
     select **Review + add**, then select **Add**:
 
-[TABLE]
+| Setting    | Value                    |
+|------------|--------------------------|
+| Icon path  | C:\Windows\system32\cmd.exe |
+| Icon index | 0                        |
 
 26. Back on the **Applications** tab of the **Create an application
     group** page, select **Next: Assignments \>**.
@@ -347,7 +437,9 @@ as the application source.
 30. On the **Workspace** tab of the **Create a workspace** page, specify
     the following setting and select **Review + create**:
 
-[TABLE]
+| Setting                   | Value |
+|---------------------------|-------|
+| Register application group | No    |
 
 31. On the **Review + create** tab of the **Create an application
     group** page, select **Create**.
@@ -367,12 +459,20 @@ less than 1 minute.
 3.  On the **Basics** tab of the **Create a workspace** page, specify
     the following settings and select **Next: Application groups \>**:
 
-[TABLE]
+| Setting         | Value                                                                                  |
+|-----------------|----------------------------------------------------------------------------------------|
+| Subscription    | The name of the Azure subscription you are using in this lab                           |
+| Resource group  | az140-21e-RG                                                                           |
+| Workspace name  | az140-21-ws1                                                                           |
+| Friendly name   | az140-21-ws1                                                                           |
+| Location       | The name of the Azure region into which you deployed resources in the first exercise of this lab or a region close to it |
 
 4.  On the **Application groups** tab of the **Create a
     workspace** page, specify the following settings:
 
-[TABLE]
+| Setting                   | Value |
+|---------------------------|-------|
+| Register application groups | Yes   |
 
 5.  On the **Workspace** tab of the **Create a workspace** page,
     select **+ Register application groups**.
