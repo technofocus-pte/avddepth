@@ -107,7 +107,28 @@ Resources tab on the right side of the lab session window and identify
 the string of characters between *User1-* and the *@* character. Use
 this string to replace the *random* placeholder.
 
-[TABLE]
+| Setting                                    | Value                                                                                                    |
+|--------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| Resource group                             | az140-21e-RG                                                                                            |
+| Name prefix                               | sh-random                                                                                               |
+| Virtual machine location                   | The name of the Azure region into which you deployed the first two session host VMs                      |
+| Availability options                      | No infrastructure redundancy required                                                                  |
+| Security type                            | Trusted launch virtual machines                                                                         |
+| Image                                    | Windows 11 Enterprise multi-session, Version 23H2 + Microsoft 365 Apps                                  |
+| Virtual machine size                     | Standard DC2s_v3                                                                                        |
+| Number of VMs                            | 1                                                                                                      |
+| OS disk type                            | Standard SSD                                                                                           |
+| OS disk size                            | Default size (128GB)                                                                                    |
+| Boot Diagnostics                        | Enable with managed storage account (recommended)                                                     |
+| Virtual network                         | az140-vnet11e                                                                                          |
+| Subnet                                 | hp1-Subnet                                                                                            |
+| Network security group                 | Basic                                                                                                |
+| Public inbound ports                   | No                                                                                                   |
+| Select which directory you would like to join | Microsoft Entra ID                                                                              |
+| Enroll VM with Intune                  | No                                                                                                   |
+| User name                             | Student                                                                                              |
+| Password                             | The same password you used when deploying the session hosts in the lab Deploy host pools and session hosts by using the Azure portal (Entra ID) |
+| Confirm password                     | The same password you specified previously                                                           |
 
 **Note**: The password should be at least 12 characters in length and
 consist of a combination of lower-case characters, upper-case
@@ -192,7 +213,7 @@ service principal**
 1.  From the lab computer, in the web browser displaying the Azure
     portal, start a PowerShell session in the Azure Cloud Shell.
 
-**Note**: If prompted, in the\*/- **Getting started** pane, in
+**Note**: If prompted, in the **Getting started** pane, in
 the **Subscription** drop-down list, select the name of the Azure
 subscription you are using in this lab and then select **Apply**.
 
