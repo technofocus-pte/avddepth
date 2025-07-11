@@ -98,7 +98,12 @@ pooled host pools.
     workspace** page, specify the following settings and
     select **Review + create**:
 
-[TABLE]
+| Setting        | Value                                                                 |
+|----------------|-----------------------------------------------------------------------|
+| Subscription   | The name of the Azure subscription you are using in this lab         |
+| Resource group | The name of a new resource group `az140-411e-RG`                     |
+| Name           | `az140-laworkspace41e`                                                |
+| Region         | The name of the Azure region where you deployed the Azure Virtual Desktop environment |
 
 3.  On the **Review + Create** page, select **Create**.
 
